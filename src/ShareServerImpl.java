@@ -14,6 +14,8 @@ public class ShareServerImpl implements ShareServer {
         super();
 
         // TODO: import shares from CSV here
+
+        // TODO: allow for multiple tokens/sessions
     }
 
     @Override
@@ -99,6 +101,15 @@ public class ShareServerImpl implements ShareServer {
                 throw new IllegalArgumentException("Not enough funds");
             }
 
+        } else {
+            throw new AccessException("Access denied");
+        }
+    }
+
+    @Override
+    public void sellShares(String token, Share share, float numShares) throws RemoteException, NotFoundException {
+        if(token.compareTo(serverToken) == 0) {
+            accountLoggedIn.sellShares(share, numShares);
         } else {
             throw new AccessException("Access denied");
         }
