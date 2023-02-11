@@ -1,9 +1,9 @@
 public class Share {
     private String ticker;
     private String name;
-    private String price;
+    private float price;
 
-    public Share(String ticker, String name, String price) {
+    public Share(String ticker, String name, float price) {
         this.ticker = ticker;
         this.name = name;
         this.price = price;
@@ -25,11 +25,11 @@ public class Share {
         this.name = name;
     }
 
-    public String getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 }

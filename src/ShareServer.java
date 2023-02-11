@@ -6,4 +6,5 @@ public interface ShareServer {
     public List<Share> downloadAllShares(String token) throws RemoteException;
     public void depositFunds(String token, float amount) throws RemoteException;
     public void withdrawFunds(String token, float amount) throws RemoteException;
+    public void purchaseShares(String token, Share share, float numShares) throws RemoteException;
 }

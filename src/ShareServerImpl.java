@@ -80,4 +80,27 @@ public class ShareServerImpl implements ShareServer {
             throw new AccessException("Access denied");
         }
     }
+
+    @Override
+    public void purchaseShares(String token, Share share, float numShares) throws RemoteException {
+        if(token.compareTo(serverToken) == 0) {
+            // Calculate the cost of transaction
+            float cost = share.getPrice() * numShares;
+
+            // Check if there are enough funds
+            if(accountLoggedIn.getBalance() >= cost) {
+                // Purchase the shares
+                accountLoggedIn.addToOwnedShares(share, numShares);
+
+                // Decrease the balance
+                float newAmount = accountLoggedIn.getBalance() - cost;
+                accountLoggedIn.setBalance(newAmount);
+            } else {
+                throw new IllegalArgumentException("Not enough funds");
+            }
+
+        } else {
+            throw new AccessException("Access denied");
+        }
+    }
 }
