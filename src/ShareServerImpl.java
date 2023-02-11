@@ -8,6 +8,7 @@ public class ShareServerImpl implements ShareServer {
     private List<Account> accounts;
     private List<Share> shares;
     private String serverToken;
+    private Account accountLoggedIn;
 
     public ShareServerImpl() {
         super();
@@ -32,6 +33,7 @@ public class ShareServerImpl implements ShareServer {
                     String token = new String(array, Charset.forName("UTF-8"));
                     serverToken = token;
 
+                    accountLoggedIn = account;
                     return token;
                 } else {
                     System.out.println("Login unsuccessful");
@@ -46,6 +48,17 @@ public class ShareServerImpl implements ShareServer {
     public List<Share> downloadAllShares(String token) throws RemoteException {
         if(token.compareTo(serverToken) == 0) {
             return shares;
+        } else {
+            throw new AccessException("Access denied");
+        }
+    }
+
+    @Override
+    public void depositFunds(String token, float amount) throws RemoteException {
+        if(token.compareTo(serverToken) == 0) {
+            // Deposit that amount
+            float newAmount = accountLoggedIn.getBalance() + amount;
+            accountLoggedIn.setBalance(newAmount);
         } else {
             throw new AccessException("Access denied");
         }
