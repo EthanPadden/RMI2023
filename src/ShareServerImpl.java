@@ -63,4 +63,21 @@ public class ShareServerImpl implements ShareServer {
             throw new AccessException("Access denied");
         }
     }
+
+    @Override
+    public void withdrawFunds(String token, float amount) throws RemoteException, IllegalArgumentException {
+        if(token.compareTo(serverToken) == 0) {
+            // Check if there are enough funds
+            if(accountLoggedIn.getBalance() >= amount) {
+                // Withdraw that amount
+                float newAmount = accountLoggedIn.getBalance() - amount;
+                accountLoggedIn.setBalance(newAmount);
+            } else {
+                throw new IllegalArgumentException("Not enough funds");
+            }
+
+        } else {
+            throw new AccessException("Access denied");
+        }
+    }
 }
