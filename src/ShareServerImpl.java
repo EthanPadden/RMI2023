@@ -114,4 +114,13 @@ public class ShareServerImpl implements ShareServer {
             throw new AccessException("Access denied");
         }
     }
+
+    @Override
+    public List<ShareHolding> getSharesOwned(String token) throws RemoteException {
+        if(token.compareTo(serverToken) == 0) {
+            return accountLoggedIn.getSharesOwned();
+        } else {
+            throw new AccessException("Access denied");
+        }
+    }
 }

@@ -79,4 +79,8 @@ public class Account {
             }
         }
     }
+
+    public List<ShareHolding> getSharesOwned() {
+        return sharesOwned;
+    }
 }

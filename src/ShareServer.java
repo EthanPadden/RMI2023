@@ -8,4 +8,5 @@ public interface ShareServer {
     public void withdrawFunds(String token, float amount) throws RemoteException;
     public void purchaseShares(String token, ShareHolding shareHolding, float numShares) throws RemoteException;
     public void sellShares(String token, ShareHolding shareHolding, float numShares) throws RemoteException, NotFoundException;
+    public List<ShareHolding> getSharesOwned(String token) throws RemoteException;
 }
