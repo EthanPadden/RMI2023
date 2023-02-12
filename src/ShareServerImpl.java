@@ -1,8 +1,8 @@
+import java.io.*;
 import java.nio.charset.Charset;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ShareServerImpl implements ShareServer {
     private List<Account> accounts;
@@ -12,8 +12,18 @@ public class ShareServerImpl implements ShareServer {
 
     public ShareServerImpl() {
         super();
+        // For simplicity, assume that each company has 100 shares available
+        try {
+            Scanner sc = new Scanner(new File("opening prices.csv"));
+            sc.useDelimiter(",");   //sets the delimiter pattern
+            while (sc.hasNext())  //returns a boolean value
+            {
+                System.out.print(sc.next());  //find and returns the next complete token from this scanner
+            }
+            sc.close();  //closes the scanner
+        } catch (FileNotFoundException fileNotFoundException) {
 
-        // TODO: import shares from CSV here
+        }
 
         // TODO: allow for multiple tokens/sessions
     }
