@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class ShareServerImpl implements ShareServer {
     private List<Account> accounts;
-    private List<Share> shares;
+    private List<ShareHolding> shareHoldings;
     private String serverToken;
     private Account accountLoggedIn;
 
@@ -47,9 +47,9 @@ public class ShareServerImpl implements ShareServer {
     }
 
     @Override
-    public List<Share> downloadAllShares(String token) throws RemoteException {
+    public List<ShareHolding> downloadAllShares(String token) throws RemoteException {
         if(token.compareTo(serverToken) == 0) {
-            return shares;
+            return shareHoldings;
         } else {
             throw new AccessException("Access denied");
         }
@@ -84,15 +84,15 @@ public class ShareServerImpl implements ShareServer {
     }
 
     @Override
-    public void purchaseShares(String token, Share share, float numShares) throws RemoteException {
+    public void purchaseShares(String token, ShareHolding shareHolding, float numShares) throws RemoteException {
         if(token.compareTo(serverToken) == 0) {
             // Calculate the cost of transaction
-            float cost = share.getPrice() * numShares;
+            float cost = shareHolding.getPrice() * numShares;
 
             // Check if there are enough funds
             if(accountLoggedIn.getBalance() >= cost) {
                 // Purchase the shares
-                accountLoggedIn.addToOwnedShares(share, numShares);
+                accountLoggedIn.addToOwnedShares(shareHolding, numShares);
 
                 // Decrease the balance
                 float newAmount = accountLoggedIn.getBalance() - cost;
@@ -107,9 +107,9 @@ public class ShareServerImpl implements ShareServer {
     }
 
     @Override
-    public void sellShares(String token, Share share, float numShares) throws RemoteException, NotFoundException {
+    public void sellShares(String token, ShareHolding shareHolding, float numShares) throws RemoteException, NotFoundException {
         if(token.compareTo(serverToken) == 0) {
-            accountLoggedIn.sellShares(share, numShares);
+            accountLoggedIn.sellShares(shareHolding, numShares);
         } else {
             throw new AccessException("Access denied");
         }

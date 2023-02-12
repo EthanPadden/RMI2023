@@ -1,12 +1,14 @@
-public class Share {
+public class ShareHolding {
     private String ticker;
     private String name;
     private float price;
+    float numSharesOwned;
 
-    public Share(String ticker, String name, float price) {
+    public ShareHolding(String ticker, String name, float price, float numSharesOwned) {
         this.ticker = ticker;
         this.name = name;
         this.price = price;
+        this.numSharesOwned = numSharesOwned;
     }
 
     public String getTicker() {
@@ -31,5 +33,13 @@ public class Share {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public float getNumSharesOwned() {
+        return numSharesOwned;
+    }
+
+    public void setNumSharesOwned(float numSharesOwned) {
+        this.numSharesOwned = numSharesOwned;
     }
 }

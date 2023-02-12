@@ -1,5 +1,3 @@
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +5,7 @@ public class Account {
     private String username;
     private String password;
     private float balance;
-    private Map<Share, Float> ownedStocks;
+    private List<ShareHolding> sharesOwned;
 
     public Account(String username, String password)
     {
@@ -43,27 +41,42 @@ public class Account {
         this.balance = balance;
     }
 
-    public void addToOwnedShares(Share share, float numShares) {
-        // TODO: check if that value updates or if a new entry is added
-        ownedStocks.put(share, numShares);
+    public void addToOwnedShares(ShareHolding shareHolding, float numShares) {
+        // Check do we own shares for that shareholding
+        for (ShareHolding ownedShareHolding : sharesOwned) {
+            if (ownedShareHolding.getTicker().compareTo(shareHolding.getTicker()) == 0) {
+                // Append the number of shares bought
+                float newSharesOwnedForThisShareHolding = ownedShareHolding.getNumSharesOwned() + numShares;
+                ownedShareHolding.setNumSharesOwned(newSharesOwnedForThisShareHolding);
+            }
+         }
+
+        // At this point, we dont own shares for this shareholding - so create the object
+        shareHolding.setNumSharesOwned(numShares);
+        sharesOwned.add(shareHolding);
     }
 
-    public void sellShares(Share share, float numSharesToSell) throws NotFoundException, IllegalArgumentException {
-        if(ownedStocks.containsKey(share)) {
-            float sharesOwned = ownedStocks.get(share);
-            if(sharesOwned > numSharesToSell) {
-                // Decrease the number of shares owned for that stock
-                float newSharesOwned = sharesOwned - numSharesToSell;
-                ownedStocks.put(share, newSharesOwned);
+    public void sellShares(ShareHolding shareHolding, float numSharesToSell) throws NotFoundException, IllegalArgumentException {
+        // Check do we own shares for that shareholding
+        for (ShareHolding ownedShareHolding : sharesOwned) {
+            if (ownedShareHolding.getTicker().compareTo(shareHolding.getTicker()) == 0) {
+                // Check do we have enough shares to sell
+                float sharesOwnedForThisShareHolding = ownedShareHolding.getNumSharesOwned();
+                if(sharesOwnedForThisShareHolding >= numSharesToSell) {
+                    // Decrease the number of shares owned for that stock
+                    float newSharesOwned = sharesOwnedForThisShareHolding - numSharesToSell;
+                    ownedShareHolding.setNumSharesOwned(newSharesOwned);
 
-                // Calculate the current value of the shares
-                float currentValue = share.getPrice() * numSharesToSell;
-                balance += currentValue;
+                    // Calculate the current value of the shares
+                    float currentValue = shareHolding.getPrice() * numSharesToSell;
+                    balance += currentValue;
+                    return;
+                } else {
+                    throw new IllegalArgumentException("Not enough shares owned");
+                }
             } else {
-                throw new IllegalArgumentException("Not enough shares owned");
+                throw new NotFoundException("No shares owned for that stock");
             }
-        } else {
-            throw new NotFoundException("No shares owned for that stock");
         }
     }
 }
