@@ -2,6 +2,9 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 public class ShareServerImpl implements ShareServer {
@@ -10,7 +13,7 @@ public class ShareServerImpl implements ShareServer {
     private String serverToken;
     private Account accountLoggedIn;
 
-    public ShareServerImpl() {
+    public ShareServerImpl() throws RemoteException {
         super();
         // For simplicity, assume that each company has 100 shares available
         try {
@@ -26,6 +29,32 @@ public class ShareServerImpl implements ShareServer {
         }
 
         // TODO: allow for multiple tokens/sessions
+    }
+
+    public static void main(String args[]) {
+        try
+        {
+            // First reset our Security manager
+            if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new SecurityManager());
+                System.out.println("Security manager set");
+            }
+
+            // Create an instance of the local object
+            ShareServer shareServer = new ShareServerImpl();
+            System.out.println("Instance of Share Server created");
+            ShareServer stub = (ShareServer) UnicastRemoteObject.exportObject(shareServer, 0);
+
+            // Put the server object into the Registry
+            Registry registry = LocateRegistry.getRegistry();
+            registry.rebind("Stock market", stub);
+            System.out.println("Name rebind completed");
+            System.out.println("Server ready for requests!");
+        }
+        catch(Exception exc)
+        {
+            System.out.println("Error in main - " + exc.toString());
+        }
     }
 
     @Override

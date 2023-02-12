@@ -1,7 +1,8 @@
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface ShareServer {
+public interface ShareServer extends Remote {
     public String login(String username, String password) throws RemoteException, InvalidLogin;
     public List<ShareHolding> downloadAllShares(String token) throws RemoteException;
     public void depositFunds(String token, float amount) throws RemoteException;
