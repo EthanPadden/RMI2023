@@ -1,0 +1,2 @@
+::java -cp c:\Users\rmisample -Djava.rmi.server.codebase=file:/c:/Users/rmisample/ -Djava.security.policy=server-windows.policy CityClient
+java -cp c:\Users\Ethan\IdeaProjects\rmisample-win\rmisample-win\out\production\rmisample-win -Djava.rmi.server.codebase=file:/c:/Users/Ethan/IdeaProjects/rmisample-win/rmisample-win/out/production/rmisample-win -Djava.security.policy=server-windows.policy CityClient

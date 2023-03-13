@@ -1,0 +1,6 @@
+grant {
+    permission java.security.AllPermission;
+};
+grant codeBase "file:${user.dir}/-" {
+    permission java.io.FilePermission "opening prices.csv", "read";
+};

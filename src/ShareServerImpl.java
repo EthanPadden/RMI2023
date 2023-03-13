@@ -2,6 +2,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.rmi.AccessException;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -34,22 +35,32 @@ public class ShareServerImpl implements ShareServer {
     public static void main(String args[]) {
         try
         {
+            // TODO: remove
+            String currentDir = System.getProperty("user.dir");
+            System.out.println("Dir: " + currentDir);
             // First reset our Security manager
-            if (System.getSecurityManager() == null) {
-                System.setSecurityManager(new SecurityManager());
-                System.out.println("Security manager set");
-            }
+            try {
+                if (System.getSecurityManager() == null) {
+                    System.setSecurityManager(new SecurityManager());
+                    System.out.println("Security manager set");
+                }
+            } catch (UnsupportedOperationException e) {
 
+            }
             // Create an instance of the local object
             ShareServer shareServer = new ShareServerImpl();
             System.out.println("Instance of Share Server created");
-            ShareServer stub = (ShareServer) UnicastRemoteObject.exportObject(shareServer, 0);
+            try {
+                ShareServer stub = (ShareServer) UnicastRemoteObject.exportObject(shareServer, 1098);
 
-            // Put the server object into the Registry
-            Registry registry = LocateRegistry.getRegistry();
-            registry.rebind("Stock market", stub);
-            System.out.println("Name rebind completed");
-            System.out.println("Server ready for requests!");
+                // Put the server object into the Registry
+                Registry registry = LocateRegistry.getRegistry();
+                registry.rebind("Stock market", stub);
+                System.out.println("Name rebind completed");
+                System.out.println("Server ready for requests!");
+            } catch (ServerException e) {
+                e.printStackTrace();
+            }
         }
         catch(Exception exc)
         {
